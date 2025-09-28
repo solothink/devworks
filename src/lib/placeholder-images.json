@@ -1,3 +1,34 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "ecom-platform",
+      "description": "A sleek dashboard of an e-commerce platform.",
+      "imageUrl": "https://images.unsplash.com/photo-1634804658555-248d9e9a212f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkYXNoYm9hcmQlMjBpbnRlcmZhY2V8ZW58MHx8fHwxNzU5MDc2MzkxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dashboard interface"
+    },
+    {
+      "id": "social-app",
+      "description": "A mobile phone showing a social media app interface.",
+      "imageUrl": "https://images.unsplash.com/photo-1480694313141-fce5e697ee25?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtb2JpbGUlMjBhcHB8ZW58MHx8fHwxNzU5MDM4NjI5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mobile app"
+    },
+    {
+      "id": "analytics-dashboard",
+      "description": "A complex data visualization dashboard with charts and graphs.",
+      "imageUrl": "https://images.unsplash.com/photo-1666875753105-c63a6f3bdc86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkYXRhJTIwdmlzdWFsaXphdGlvbnxlbnwwfHx8fDE3NTg5OTg1MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "data visualization"
+    },
+    {
+      "id": "voting-dapp",
+      "description": "An interface for a decentralized voting application showing candidates.",
+      "imageUrl": "https://images.unsplash.com/photo-1659177137555-2f1ba453f70c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxibG9ja2NoYWluJTIwaW50ZXJmYWNlfGVufDB8fHx8MTc1OTA3NjM5MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "blockchain interface"
+    },
+    {
+      "id": "hero-background",
+      "description": "Abstract background with code and network lines",
+      "imageUrl": "https://images.unsplash.com/photo-1565106430482-8f6e74349ca1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhYnN0cmFjdCUyMGNvZGV8ZW58MHx8fHwxNzU5MDQ3NzI0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract code"
+    }
+  ]
 }
