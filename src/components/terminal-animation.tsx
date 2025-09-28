@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Terminal } from 'lucide-react';
+import { Mail, Terminal } from 'lucide-react';
 
 export function TerminalAnimation() {
+  const [showIcon, setShowIcon] = useState(false);
   const [initialText, setInitialText] = useState('');
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
   const [terminalText, setTerminalText] = useState('');
@@ -13,13 +14,21 @@ export function TerminalAnimation() {
   const fullTerminalText = "Stuck on a problem? Let's build the solution together.";
 
   useEffect(() => {
-    if (initialText.length < fullInitialText.length) {
+    const iconTimer = setTimeout(() => {
+      setShowIcon(true);
+    }, 500); // Wait half a second before icon appears
+
+    return () => clearTimeout(iconTimer);
+  }, []);
+
+  useEffect(() => {
+    if (showIcon && initialText.length < fullInitialText.length) {
       const timeout = setTimeout(() => {
         setInitialText(fullInitialText.slice(0, initialText.length + 1));
       }, 50);
       return () => clearTimeout(timeout);
     }
-  }, [initialText, fullInitialText]);
+  }, [showIcon, initialText, fullInitialText]);
 
   useEffect(() => {
     if (isTerminalOpen && terminalText.length < fullTerminalText.length) {
@@ -37,16 +46,23 @@ export function TerminalAnimation() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto font-code p-4">
+    <div className="w-full max-w-4xl mx-auto font-code p-4 min-h-[120px]">
       {!isTerminalOpen ? (
         <button
           onClick={handleOpenTerminal}
-          className="text-left text-lg md:text-xl text-foreground w-full cursor-pointer group"
+          className="text-left text-lg md:text-xl text-foreground w-full cursor-pointer group flex items-center gap-4"
           disabled={initialText.length < fullInitialText.length}
         >
-          <span className="text-primary">&gt;</span> {initialText}
-          {initialText.length === fullInitialText.length && (
-            <span className="animate-ping">_</span>
+          {showIcon && (
+              <Mail className="h-8 w-8 text-primary animate-slide-in" />
+          )}
+          {showIcon && (
+            <span className="animate-fade-in">
+              <span className="text-primary">&gt;</span> {initialText}
+              {initialText.length === fullInitialText.length && (
+                <span className="animate-ping">_</span>
+              )}
+            </span>
           )}
         </button>
       ) : (
