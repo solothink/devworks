@@ -49,7 +49,7 @@ export function TerminalAnimation() {
       }, 100);
       return () => clearTimeout(timeout);
     }
-    if (commandText.length === fullCommandText.length && !showRedirect) {
+    if (isHiring && commandText.length === fullCommandText.length && !showRedirect) {
         const redirectTimer = setTimeout(() => {
             setShowRedirect(true);
         }, 300);
