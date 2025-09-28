@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { Button } from '@/components/ui/button';
 import { Mail, Terminal, Briefcase } from 'lucide-react';
 
@@ -87,7 +87,7 @@ export function TerminalAnimation() {
           {showIcon && <Mail className="h-8 w-8 text-primary animate-slide-in" />}
           {showIcon && (
             <span className="animate-fade-in">
-              <span className="text-primary">&gt;</span> {initialText}
+              <span className="text-primary">></span> {initialText}
               {isInitialTypingComplete && <span className="animate-ping">_</span>}
             </span>
           )}
@@ -107,7 +107,7 @@ export function TerminalAnimation() {
           </div>
           <div className="p-6 text-left space-y-4">
             <p className="text-foreground text-lg md:text-xl">
-              <span className="text-primary">&gt;</span> {terminalText}
+              <span className="text-primary">></span> {terminalText}
               {!isHiring && isTerminalTypingComplete && <span className="animate-ping ml-1">_</span>}
             </p>
             {isTerminalTypingComplete && !isHiring && (
@@ -120,7 +120,7 @@ export function TerminalAnimation() {
              {isHiring && (
               <div className="animate-fade-in">
                 <p className="text-foreground text-lg md:text-xl">
-                  <span className="text-primary">&gt;</span> {commandText}
+                  <span className="text-primary">></span> {commandText}
                   {commandText.length === fullCommandText.length ? '' : <span className="animate-ping ml-1">_</span>}
                 </p>
                 {showRedirect && (
