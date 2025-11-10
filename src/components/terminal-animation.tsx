@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -43,23 +44,28 @@ export function TerminalAnimation() {
   }, [isTerminalOpen, isHiring, terminalText, fullTerminalText]);
 
   useEffect(() => {
-    if (isHiring && commandText.length < fullCommandText.length) {
+    if (!isHiring) return;
+
+    if (commandText.length < fullCommandText.length) {
       const timeout = setTimeout(() => {
         setCommandText(fullCommandText.slice(0, commandText.length + 1));
       }, 100);
       return () => clearTimeout(timeout);
     }
-    if (isHiring && commandText.length === fullCommandText.length && !showRedirect) {
-        const redirectTimer = setTimeout(() => {
-            setShowRedirect(true);
-        }, 300);
-        const navigationTimer = setTimeout(() => {
-            router.push('/contact');
-        }, 1300);
-        return () => {
-            clearTimeout(redirectTimer);
-            clearTimeout(navigationTimer);
-        }
+    
+    if (commandText.length === fullCommandText.length && !showRedirect) {
+      const showRedirectTimer = setTimeout(() => {
+        setShowRedirect(true);
+      }, 300);
+      
+      const navigationTimer = setTimeout(() => {
+        router.push('/contact');
+      }, 1300);
+
+      return () => {
+        clearTimeout(showRedirectTimer);
+        clearTimeout(navigationTimer);
+      };
     }
   }, [isHiring, commandText, fullCommandText, showRedirect, router]);
 
@@ -121,7 +127,7 @@ export function TerminalAnimation() {
               <div className="animate-fade-in">
                 <p className="text-foreground text-lg md:text-xl">
                   <span className="text-primary">></span> {commandText}
-                  {commandText.length === fullCommandText.length ? '' : <span className="animate-ping ml-1">_</span>}
+                  {commandText.length === fullCommandText.length && !showRedirect ? '' : <span className="animate-ping ml-1">_</span>}
                 </p>
                 {showRedirect && (
                      <p className="text-accent text-lg md:text-xl animate-fade-in pt-2">Redirecting to contact page...</p>
