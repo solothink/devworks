@@ -1,5 +1,12 @@
+'use client';
+
+import dynamic from 'next/dynamic';
 import { TerminalAnimation } from './terminal-animation';
-import { SplineAnimation } from './spline-animation';
+
+const SplineAnimation = dynamic(
+  () => import('./spline-animation').then((mod) => mod.SplineAnimation),
+  { ssr: false }
+);
 
 export function Hero() {
   return (
