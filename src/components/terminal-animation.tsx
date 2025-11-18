@@ -46,28 +46,25 @@ export function TerminalAnimation() {
   useEffect(() => {
     if (!isHiring) return;
 
+    let timeoutId: NodeJS.Timeout;
+
     if (commandText.length < fullCommandText.length) {
-      const timeout = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setCommandText(fullCommandText.slice(0, commandText.length + 1));
       }, 100);
-      return () => clearTimeout(timeout);
-    }
-    
-    if (commandText.length === fullCommandText.length && !showRedirect) {
-      const showRedirectTimer = setTimeout(() => {
+    } else if (!showRedirect) {
+      timeoutId = setTimeout(() => {
         setShowRedirect(true);
       }, 300);
-      
-      const navigationTimer = setTimeout(() => {
+    } else {
+       timeoutId = setTimeout(() => {
         router.push('/contact');
-      }, 1300);
-
-      return () => {
-        clearTimeout(showRedirectTimer);
-        clearTimeout(navigationTimer);
-      };
+      }, 1000);
     }
-  }, [isHiring, commandText, fullCommandText, showRedirect, router]);
+
+    return () => clearTimeout(timeoutId);
+  }, [isHiring, commandText, showRedirect, router, fullCommandText]);
+
 
   const handleOpenTerminal = () => {
     if (initialText.length === fullInitialText.length) {
