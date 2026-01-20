@@ -1,5 +1,3 @@
-'use client';
-
 import { TerminalAnimation } from './terminal-animation';
 
 export function Hero() {
