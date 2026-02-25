@@ -68,14 +68,14 @@ export function Portfolio() {
                   <div className="flex items-center justify-between w-full">
                     <div className="flex gap-2">
                         <Button variant="ghost" size="sm" asChild>
-                            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                            <Link href="/project-teaser">
                                 <Github className="h-4 w-4" />
-                            </a>
+                            </Link>
                         </Button>
                         <Button variant="ghost" size="sm" asChild>
-                            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                            <Link href="/project-teaser">
                                 <ExternalLink className="h-4 w-4" />
-                            </a>
+                            </Link>
                         </Button>
                     </div>
                     {project.caseStudy && (
