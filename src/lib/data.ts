@@ -36,8 +36,10 @@ export const services = [
 export const portfolioProjects = [
   {
     id: 1,
-    title: 'E-commerce Platform',
-    description: 'A full-featured e-commerce site with a custom CMS, payment gateway integration, and responsive design.',
+    title: 'E-commerce Overhaul',
+    problem: 'Legacy system causing high cart abandonment and slow load times.',
+    solution: 'Built a headless Next.js frontend with an optimized checkout flow.',
+    impact: '40% increase in mobile conversion rates.',
     image: 'ecom-platform',
     githubUrl: 'https://github.com',
     liveUrl: '#',
@@ -45,8 +47,10 @@ export const portfolioProjects = [
   },
   {
     id: 2,
-    title: 'React Native Social App',
-    description: 'A cross-platform mobile app for social networking, featuring real-time chat and push notifications.',
+    title: 'Social App Scaling',
+    problem: 'The app crashed frequently under peak traffic of 10k users.',
+    solution: 'Implemented real-time data sync and horizontal auto-scaling.',
+    impact: '99.9% uptime achieved with 2x user growth.',
     image: 'social-app',
     githubUrl: 'https://github.com',
     liveUrl: '#',
@@ -54,8 +58,10 @@ export const portfolioProjects = [
   },
   {
     id: 3,
-    title: 'AI-Powered Analytics Dashboard',
-    description: 'A web application that visualizes complex data and uses AI to provide actionable insights.',
+    title: 'AI Analytics Engine',
+    problem: 'Manual data entry was costing the client 40 hours per week.',
+    solution: 'Developed an automated pipeline using Gemini for data extraction.',
+    impact: 'Saved $5k/month in operational overhead.',
     image: 'analytics-dashboard',
     githubUrl: 'https://github.com',
     liveUrl: '#',
@@ -63,13 +69,38 @@ export const portfolioProjects = [
   },
   {
     id: 4,
-    title: 'Decentralized Voting dApp',
-    description: 'A secure and transparent voting application built on the Ethereum blockchain using Solidity smart contracts.',
+    title: 'Secure Voting System',
+    problem: 'Need for tamper-proof voting for a non-profit foundation.',
+    solution: 'Deployed a private Ethereum-based ledger for voting records.',
+    impact: '100% verifiable and immutable results for 50k members.',
     image: 'voting-dapp',
     githubUrl: 'https://github.com',
     liveUrl: '#',
     caseStudy: false,
   },
+];
+
+export const processSteps = [
+  {
+    step: '01',
+    title: 'Discovery & Strategy',
+    description: "We start by identifying your core business challenges and defining the MVP features that will drive the most immediate value."
+  },
+  {
+    step: '02',
+    title: 'Prototyping & Feedback',
+    description: "I build rapid, interactive prototypes so you can experience the solution before full-scale development begins."
+  },
+  {
+    step: '03',
+    title: 'Agile Development',
+    description: "Transparent coding with weekly updates and demo sessions to ensure the product aligns perfectly with your vision."
+  },
+  {
+    step: '04',
+    title: 'Launch & Growth',
+    description: "Ongoing support and performance monitoring to ensure your product scales as your user base grows."
+  }
 ];
 
 export const clientStories: SelectClientSuccessStoryInput['clientStories'] = [
