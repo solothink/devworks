@@ -129,10 +129,10 @@ export function ProjectUploadForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="< $5,000">&lt; $5,000</SelectItem>
-                      <SelectItem value="$5,000 - $10,000">$5,000 - $10,000</SelectItem>
-                      <SelectItem value="$10,000 - $25,000">$10,000 - $25,000</SelectItem>
-                      <SelectItem value="$25,000+">$25,000+</SelectItem>
+                      <SelectItem value="< ₹50,000">&lt; ₹50,000</SelectItem>
+                      <SelectItem value="₹50,000 - ₹2,00,000">₹50,000 - ₹2,00,000</SelectItem>
+                      <SelectItem value="₹2,00,000 - ₹10,00,000">₹2,00,000 - ₹10,00,000</SelectItem>
+                      <SelectItem value="₹10,00,000+">₹10,00,000+</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

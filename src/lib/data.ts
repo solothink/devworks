@@ -61,7 +61,7 @@ export const portfolioProjects = [
     title: 'AI Analytics Engine',
     problem: 'Manual data entry was costing the client 40 hours per week.',
     solution: 'Developed an automated pipeline using Gemini for data extraction.',
-    impact: 'Saved $5k/month in operational overhead.',
+    impact: 'Saved ₹4,00,000/month in operational overhead.',
     image: 'analytics-dashboard',
     githubUrl: 'https://github.com',
     liveUrl: '#',
