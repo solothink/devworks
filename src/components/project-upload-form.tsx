@@ -24,7 +24,11 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { handleProjectUploadForm } from "@/lib/actions";
+import { useFirestore } from "@/firebase";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError } from "@/firebase/errors";
+import { useState } from "react";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_FILE_TYPES = ["image/jpeg", "image/png", "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
@@ -34,53 +38,64 @@ const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }),
   budget: z.string().optional(),
   description: z.string().min(20, { message: "Description must be at least 20 characters." }),
-  files: z.any()
-    .optional()
-    .refine((files) => !files || files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
-    .refine(
-      (files) => !files || ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
-      ".jpg, .png, .pdf, and .doc files are accepted."
-    ),
 });
 
 export function ProjectUploadForm() {
   const { toast } = useToast();
+  const firestore = useFirestore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
       description: "",
+      budget: "",
     },
   });
 
-  const fileRef = form.register("files");
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const formData = new FormData();
-    Object.entries(values).forEach(([key, value]) => {
-      if (key === 'files' && value?.[0]) {
-        formData.append(key, value[0]);
-      } else if (value) {
-        formData.append(key, value);
-      }
-    });
+    if (!firestore) return;
+    setIsSubmitting(true);
 
-    const result = await handleProjectUploadForm(formData);
+    const submissionId = crypto.randomUUID();
+    const docRef = doc(firestore, "project_requirements", submissionId);
+    
+    const submissionData = {
+      id: submissionId,
+      clientName: values.name,
+      clientEmail: values.email,
+      budgetRange: values.budget || "Not specified",
+      projectDescription: values.description,
+      submissionDate: new Date().toISOString(),
+      createdAt: serverTimestamp(),
+    };
 
-    if (result.success) {
-      toast({
-        title: "Project Submitted!",
-        description: "Thank you! I've received your project details and will be in touch shortly.",
+    setDoc(docRef, submissionData)
+      .then(() => {
+        toast({
+          title: "Project Submitted!",
+          description: "Thank you! I've received your project details and will be in touch shortly.",
+        });
+        form.reset();
+      })
+      .catch(async (error) => {
+        const permissionError = new FirestorePermissionError({
+          path: docRef.path,
+          operation: 'create',
+          requestResourceData: submissionData,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+        toast({
+          variant: "destructive",
+          title: "Submission Failed",
+          description: "There was a problem saving your project. Please try again.",
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
-      form.reset();
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Submission Failed",
-        description: result.message || "There was a problem with your submission.",
-      });
-    }
   }
 
   return (
@@ -153,26 +168,9 @@ export function ProjectUploadForm() {
                 </FormItem>
               )}
             />
-            
-            <FormField
-              control={form.control}
-              name="files"
-              render={({ field }) => {
-                return (
-                  <FormItem>
-                    <FormLabel>Project Files (Optional)</FormLabel>
-                    <FormControl>
-                      <Input type="file" {...fileRef} />
-                    </FormControl>
-                    <FormDescription>Attach mockups, requirements docs, etc. (Max 5MB)</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
 
-            <Button type="submit" className="w-full" size="lg" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? "Submitting..." : "Submit Project"}
+            <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Submit Project"}
             </Button>
           </form>
         </Form>
