@@ -1,0 +1,95 @@
+{
+  "entities": {
+    "ProjectRequirement": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ProjectRequirement",
+      "type": "object",
+      "description": "Represents a project requirement submission from a potential client, detailing their project needs and contact information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ProjectRequirement entity."
+        },
+        "clientName": {
+          "type": "string",
+          "description": "Name of the client submitting the project requirements."
+        },
+        "clientEmail": {
+          "type": "string",
+          "description": "Email address of the client submitting the project requirements.",
+          "format": "email"
+        },
+        "budgetRange": {
+          "type": "string",
+          "description": "Client's specified budget range for the project (e.g., '$1000-$5000', 'Negotiable')."
+        },
+        "projectDescription": {
+          "type": "string",
+          "description": "Detailed description of the project provided by the client."
+        },
+        "uploadedFileUrls": {
+          "type": "array",
+          "description": "An array of URLs or references to files uploaded by the client (e.g., PDFs, images, documents).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "submissionDate": {
+          "type": "string",
+          "description": "The date and time when the project requirement was submitted.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "clientName",
+        "clientEmail",
+        "projectDescription",
+        "submissionDate"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/project_requirements/{projectRequirementId}",
+        "definition": {
+          "entityName": "ProjectRequirement",
+          "schema": {
+            "$ref": "#/backend/entities/ProjectRequirement"
+          },
+          "description": "Stores individual project requirement submissions from potential clients. Each document represents a single form submission. Write access (submission) is open to all users (including anonymous), while read access is restricted to authenticated administrators. The 'id' field within the document should match the '{projectRequirementId}' wildcard. This collection does not include authorization-specific fields like ownerId or members map, as read access is managed via the separate '/roles_admin' collection, ensuring authorization independence.",
+          "params": [
+            {
+              "name": "projectRequirementId",
+              "description": "The unique identifier for a specific project requirement submission, which will also be the document ID."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{adminUid}",
+        "definition": {
+          "entityName": "AdminRole",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "A collection used for Database Access Control (DBAC) to define which users have administrative privileges. The mere existence of a document with a user's UID at this path grants them an 'admin' role, primarily for reading sensitive data like project requirements. Documents can be empty or contain minimal data, as existence is the primary check for authorization independence.",
+          "params": [
+            {
+              "name": "adminUid",
+              "description": "The Firebase Authentication UID of a user who has been granted administrative privileges."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The recommended Firestore structure for 'Project Details Form' responses is a top-level collection named 'project_requirements'. Each document in this collection will represent a single submission of the ProjectRequirement entity.\n\n**Authorization Independence (CRITICAL):** This structure explicitly achieves Authorization Independence by segregating read permissions from the data itself. ProjectRequirement documents do not contain any fields (like 'ownerId' or 'members' map) that dictate read access. Instead, read access is governed by an external, dedicated 'roles_admin' collection. When an authenticated user (e.g., the developer 'Abhilash DevWorks') attempts to read a ProjectRequirement, security rules will perform an `exists()` check against the 'roles_admin/{uid}' path. This design eliminates `get()` calls to the ProjectRequirement document itself for authorization purposes, ensuring atomic operations and simplifying rule debugging.\n\n**QAPs (Rules are not Filters):**\n*   **For `create` operations (form submission):** The 'project_requirements' collection is designed to allow any user, including unauthenticated ones (as per the application's 'anonymous' auth provider), to create a new ProjectRequirement document. This aligns with the user's need for clients to upload project details easily. The security rule would simply `allow create: if request.resource.data.keys().hasAll(['clientName', 'clientEmail', 'projectDescription', 'submissionDate']) && request.resource.data.submissionDate == request.time;` (with further validation). This approach ensures that a client can always write (submit) a document, satisfying the QAP for write operations.\n*   **For `list` and `get` operations (reading submissions):** Access to read ProjectRequirement documents will be restricted to users explicitly designated as administrators. This is managed by the separate '/roles_admin/{adminUid}' collection. A security rule like `allow read: if exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));` enables the administrator to efficiently query and retrieve all project requirements without needing to filter on client-side data. This precisely matches the QAP principle: the security rules themselves act as the authoritative filter, preventing unauthorized listing or retrieval."
+  }
+}

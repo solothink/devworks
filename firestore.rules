@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * APP SECURITY CONFIGURATION
+     * 
+     * Core Philosophy:
+     * This ruleset implements an administrative-access model combined with public data submission.
+     * It prioritizes "Authorization Independence," where the permissions for sensitive data 
+     * (Project Requirements) are decoupled from the data itself and managed via a dedicated 
+     * roles collection.
+     * 
+     * Data Structure:
+     * - /project_requirements/{id}: Publicly writable (submissions), admin-only readable.
+     * - /roles_admin/{uid}: A lookup collection where the existence of a UID grants admin privileges.
+     * 
+     * Key Security Decisions:
+     * - Public Submissions: Anyone (including anonymous users) can submit a project requirement.
+     * - Admin Gatekeeping: Access to view or manage submissions is strictly controlled by 
+     *   checking for the user's UID in the `/roles_admin` collection.
+     * - Relational Integrity: On creation of a requirement, we enforce that the internal 
+     *   'id' field matches the Firestore Document ID to ensure data consistency.
+     * 
+     * Denormalization for Authorization:
+     * - Instead of complex nested queries, we use a dedicated `/roles_admin` collection. 
+     *   The rules use `exists()` to perform a fast, binary check on whether a user is 
+     *   authorized to view restricted collections.
+     */
+
+    /** 
+     * Helper: Check if the user is authenticated with Firebase Auth.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** 
+     * Helper: Check if the current user's UID exists in the admin roles collection.
+     * This is the primary mechanism for administrative authorization.
+     */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    /** 
+     * Helper: Validates that an administrative user is acting on an existing document.
+     */
+    function isExistingAdmin() {
+      return isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Rules for the admin roles lookup collection. Access is highly restricted.
+     * @path /roles_admin/{adminUid}
+     * @allow (get) If the user is an admin themselves.
+     * @deny (create/update/delete) All client-side writes to prevent privilege escalation.
+     * @principle Role-Based Access Control (RBAC) via existence checks.
+     */
+    match /roles_admin/{adminUid} {
+      allow get: if isAdmin();
+      allow list: if isAdmin();
+      allow create, update, delete: if false; // Managed via Admin SDK or Firebase Console
+    }
+
+    /**
+     * @description Stores project requirement submissions. Open for creation, restricted for viewing.
+     * @path /project_requirements/{projectRequirementId}
+     * @allow (create) Anyone can submit a requirement if the ID matches the path.
+     * @allow (get/list/update/delete) Only users verified in the roles_admin collection.
+     * @deny (get/list) By non-admin users to protect client lead information.
+     * @principle Public submission with administrative oversight and path-ID integrity.
+     */
+    match /project_requirements/{projectRequirementId} {
+      
+      // Anyone can submit a form. We enforce that the 'id' field matches the document ID.
+      allow create: if request.resource.data.id == projectRequirementId;
+
+      // Only administrators can read, list, or manage existing submissions.
+      allow get, list: if isAdmin();
+      allow update, delete: if isExistingAdmin();
+    }
+
+    // Default deny for any unmatched paths.
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}
