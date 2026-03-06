@@ -1,5 +1,5 @@
 import { ContactForm } from '@/components/contact-form';
-import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
+import { Github, Linkedin, Mail } from 'lucide-react';
 
 export default function ContactPage() {
   return (
@@ -20,11 +20,17 @@ export default function ContactPage() {
               </a>
             </div>
             <div className="mt-8 pt-8 border-t">
-              <h3 className="text-lg font-semibold mb-4">Connect on Social Media</h3>
+              <h3 className="text-lg font-semibold mb-4">Connect with Me</h3>
               <div className="flex items-center space-x-6">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground"><Github size={28} /></a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground"><Linkedin size={28} /></a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground"><Twitter size={28} /></a>
+                <a href="https://github.com/solothink" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
+                  <Github size={28} />
+                </a>
+                <a href="https://www.linkedin.com/in/abhilash-n-28116b211" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
+                  <Linkedin size={28} />
+                </a>
+                <a href="mailto:devworksabhi@gmail.com" className="text-muted-foreground hover:text-foreground">
+                  <Mail size={28} />
+                </a>
               </div>
             </div>
           </div>
