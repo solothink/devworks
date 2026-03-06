@@ -42,13 +42,29 @@ export function Footer() {
             <div>
               <h3 className="font-semibold mb-4">Connect</h3>
               <div className="flex items-center space-x-5">
-                <a href="https://github.com/solothink" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="https://github.com/solothink" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  title="GitHub Profile"
+                >
                   <Github size={20} />
                 </a>
-                <a href="https://www.linkedin.com/in/abhilash-n-28116b211" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="https://www.linkedin.com/in/abhilash-n-28116b211" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  title="LinkedIn Profile"
+                >
                   <Linkedin size={20} />
                 </a>
-                <a href="mailto:devworksabhi@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="mailto:devworksabhi@gmail.com" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  title="Send an Email"
+                >
                   <Mail size={20} />
                 </a>
               </div>

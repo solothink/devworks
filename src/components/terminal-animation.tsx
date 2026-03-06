@@ -54,9 +54,14 @@ export function TerminalAnimation() {
   }, [showIcon, step, text, commandText, router]);
 
   const handleOpenTerminal = () => {
-    if (text.length === fullInitialText.length) {
-      setStep('terminal');
-      setText('');
+    if (step === 'initial') {
+      // If still typing, skip to the end. Otherwise move to next step.
+      if (text.length < fullInitialText.length) {
+        setText(fullInitialText);
+      } else {
+        setStep('terminal');
+        setText('');
+      }
     }
   };
 
@@ -64,7 +69,6 @@ export function TerminalAnimation() {
     setStep('hiring');
   };
 
-  const isInitialComplete = step === 'initial' && text.length === fullInitialText.length;
   const isTerminalComplete = step === 'terminal' && text.length === fullTerminalText.length;
 
   return (
@@ -72,14 +76,14 @@ export function TerminalAnimation() {
       {step === 'initial' ? (
         <button
           onClick={handleOpenTerminal}
-          className="text-left text-lg md:text-xl text-foreground w-full cursor-pointer group flex items-center gap-4 outline-none"
-          disabled={!isInitialComplete}
+          className="text-left text-lg md:text-xl text-foreground w-full cursor-pointer group flex items-center gap-4 outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg p-2 transition-colors hover:bg-white/5"
+          title="Open message from DevWorks"
         >
           {showIcon && <Mail className="h-8 w-8 text-primary transition-all duration-500 animate-in fade-in slide-in-from-left-4" />}
           {showIcon && (
             <span className="animate-in fade-in duration-700">
               <span className="text-primary">></span> {text}
-              {isInitialComplete && <span className="animate-pulse">_</span>}
+              <span className="animate-pulse">_</span>
             </span>
           )}
         </button>
