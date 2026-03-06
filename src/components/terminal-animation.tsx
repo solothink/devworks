@@ -18,13 +18,11 @@ export function TerminalAnimation() {
   const fullTerminalText = "Stuck on a problem? Let's build the solution together.";
   const fullCommandText = 'cd /contact';
 
-  // Step 1: Initial delay for icon
   useEffect(() => {
     const timer = setTimeout(() => setShowIcon(true), 500);
     return () => clearTimeout(timer);
   }, []);
 
-  // Step 2: Typing logic based on state
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -58,7 +56,7 @@ export function TerminalAnimation() {
   const handleOpenTerminal = () => {
     if (text.length === fullInitialText.length) {
       setStep('terminal');
-      setText(''); // Reset text for the next typing sequence
+      setText('');
     }
   };
 

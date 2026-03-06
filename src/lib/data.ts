@@ -126,4 +126,4 @@ export const clientStories: SelectClientSuccessStoryInput['clientStories'] = [
     }
   ];
 
-  export const industries = [...new Set(clientStories.map(story => story.industry))];
+export const industries = [...new Set(clientStories.map(story => story.industry))];
