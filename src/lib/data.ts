@@ -105,11 +105,6 @@ export const processSteps = [
 
 export const clientStories: SelectClientSuccessStoryInput['clientStories'] = [
     {
-      title: 'Fintech Startup Overhaul',
-      story: 'We transformed a legacy fintech platform into a modern, scalable solution using Next.js and microservices, resulting in a 50% increase in performance and a 30% reduction in operational costs. The new API-first architecture allowed for seamless integration with third-party services.',
-      industry: 'Fintech',
-    },
-    {
       title: 'Healthcare Patient Portal',
       story: 'Developed a HIPAA-compliant patient portal with React Native, enabling secure communication between patients and doctors. The app received a 4.8-star rating on app stores and improved patient engagement by 40%.',
       industry: 'Healthcare',
