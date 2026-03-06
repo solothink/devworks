@@ -14,9 +14,9 @@ export default function ContactPage() {
               Have a project in mind or just want to say hello? I'd love to hear from you. Fill out the form or use the contact details below.
             </p>
             <div className="space-y-4">
-              <a href="mailto:hire@devworks.com" className="flex items-center gap-3 text-lg hover:text-primary transition-colors">
+              <a href="mailto:devworksabhi@gmail.com" className="flex items-center gap-3 text-lg hover:text-primary transition-colors">
                 <Mail className="h-5 w-5" />
-                <span>hire@devworks.com</span>
+                <span>devworksabhi@gmail.com</span>
               </a>
               <a href="tel:+1234567890" className="flex items-center gap-3 text-lg hover:text-primary transition-colors">
                 <Phone className="h-5 w-5" />

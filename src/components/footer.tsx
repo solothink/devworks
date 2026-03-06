@@ -28,7 +28,7 @@ export function Footer() {
             <div>
               <h3 className="font-semibold mb-4">Contact</h3>
               <ul className="space-y-2">
-                <li><a href="mailto:hire@devworks.com" className="text-muted-foreground hover:text-foreground">hire@devworks.com</a></li>
+                <li><a href="mailto:devworksabhi@gmail.com" className="text-muted-foreground hover:text-foreground">devworksabhi@gmail.com</a></li>
                 <li><a href="tel:+1234567890" className="text-muted-foreground hover:text-foreground">+1 (234) 567-890</a></li>
               </ul>
             </div>
