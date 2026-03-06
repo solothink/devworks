@@ -106,17 +106,17 @@ export const processSteps = [
 export const clientStories: SelectClientSuccessStoryInput['clientStories'] = [
     {
       title: 'Healthcare Patient Portal',
-      story: 'Developed a HIPAA-compliant patient portal with React Native, enabling secure communication between patients and doctors. The app received a 4.8-star rating on app stores and improved patient engagement by 40%.',
+      story: 'Developed a secure, HIPAA-compliant patient portal using React Native to facilitate direct communication between patients and providers. The solution streamlined appointment scheduling and significantly improved patient engagement levels.',
       industry: 'Healthcare',
     },
     {
       title: 'E-commerce Fashion Retailer',
-      story: 'Built a visually stunning e-commerce store for a fashion brand, focusing on a mobile-first user experience. The site saw a 60% increase in mobile conversions and was featured in several design galleries for its clean UI/UX.',
+      story: 'Created a high-performance e-commerce platform with a focus on mobile-first design and an optimized checkout experience. The project resulted in a measurable increase in conversion rates and improved user navigation.',
       industry: 'E-commerce',
     },
     {
         title: 'Real Estate Platform Modernization',
-        story: 'Upgraded a major real estate listings platform with a new frontend built in Next.js and a backend powered by Node.js. Integrated with multiple MLS providers and improved search speed by 200%, leading to a significant boost in user retention.',
+        story: 'Modernized a real estate platform by transitioning to a Next.js frontend and a scalable Node.js backend. The update enhanced search performance and improved user retention through a more responsive interface.',
         industry: 'Real Estate',
     }
   ];
