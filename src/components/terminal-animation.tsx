@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -6,92 +5,83 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Mail, Terminal, Briefcase } from 'lucide-react';
 
+type AnimationStep = 'initial' | 'terminal' | 'hiring' | 'redirecting';
+
 export function TerminalAnimation() {
   const router = useRouter();
-  const [showIcon, setShowIcon] = useState(false);
-  const [initialText, setInitialText] = useState('');
-  const [isTerminalOpen, setIsTerminalOpen] = useState(false);
-  const [terminalText, setTerminalText] = useState('');
-  const [isHiring, setIsHiring] = useState(false);
+  const [step, setStep] = useState<AnimationStep>('initial');
+  const [text, setText] = useState('');
   const [commandText, setCommandText] = useState('');
-  const [showRedirect, setShowRedirect] = useState(false);
-
+  const [showIcon, setShowIcon] = useState(false);
+  
   const fullInitialText = "You've got a message from DevWorks. Click to open.";
   const fullTerminalText = "Stuck on a problem? Let's build the solution together.";
   const fullCommandText = 'cd /contact';
 
+  // Step 1: Initial delay for icon
   useEffect(() => {
-    const iconTimer = setTimeout(() => setShowIcon(true), 500);
-    return () => clearTimeout(iconTimer);
+    const timer = setTimeout(() => setShowIcon(true), 500);
+    return () => clearTimeout(timer);
   }, []);
 
+  // Step 2: Typing logic based on state
   useEffect(() => {
-    if (showIcon && initialText.length < fullInitialText.length) {
-      const timeout = setTimeout(() => {
-        setInitialText(fullInitialText.slice(0, initialText.length + 1));
-      }, 50);
-      return () => clearTimeout(timeout);
-    }
-  }, [showIcon, initialText, fullInitialText]);
+    let timer: NodeJS.Timeout;
 
-  useEffect(() => {
-    if (isTerminalOpen && !isHiring && terminalText.length < fullTerminalText.length) {
-      const timeout = setTimeout(() => {
-        setTerminalText(fullTerminalText.slice(0, terminalText.length + 1));
-      }, 60);
-      return () => clearTimeout(timeout);
-    }
-  }, [isTerminalOpen, isHiring, terminalText, fullTerminalText]);
-
-  useEffect(() => {
-    if (!isHiring) return;
-
-    let timeoutId: NodeJS.Timeout;
-
-    if (commandText.length < fullCommandText.length) {
-      timeoutId = setTimeout(() => {
-        setCommandText(fullCommandText.slice(0, commandText.length + 1));
-      }, 100);
-    } else if (!showRedirect) {
-      timeoutId = setTimeout(() => {
-        setShowRedirect(true);
-      }, 300);
-    } else {
-       timeoutId = setTimeout(() => {
+    if (showIcon && step === 'initial' && text.length < fullInitialText.length) {
+      timer = setTimeout(() => {
+        setText(fullInitialText.slice(0, text.length + 1));
+      }, 40);
+    } else if (step === 'terminal' && text.length < fullTerminalText.length) {
+      timer = setTimeout(() => {
+        setText(fullTerminalText.slice(0, text.length + 1));
+      }, 30);
+    } else if (step === 'hiring') {
+      if (commandText.length < fullCommandText.length) {
+        timer = setTimeout(() => {
+          setCommandText(fullCommandText.slice(0, commandText.length + 1));
+        }, 80);
+      } else {
+        timer = setTimeout(() => {
+          setStep('redirecting');
+        }, 400);
+      }
+    } else if (step === 'redirecting') {
+      timer = setTimeout(() => {
         router.push('/contact');
-      }, 1000);
+      }, 800);
     }
 
-    return () => clearTimeout(timeoutId);
-  }, [isHiring, commandText, showRedirect, router, fullCommandText]);
-
+    return () => clearTimeout(timer);
+  }, [showIcon, step, text, commandText, router]);
 
   const handleOpenTerminal = () => {
-    if (initialText.length === fullInitialText.length) {
-      setIsTerminalOpen(true);
+    if (text.length === fullInitialText.length) {
+      setStep('terminal');
+      setText(''); // Reset text for the next typing sequence
     }
   };
 
   const handleHireMe = () => {
-    setIsHiring(true);
+    setStep('hiring');
   };
 
-  const isInitialTypingComplete = initialText.length === fullInitialText.length;
-  const isTerminalTypingComplete = terminalText.length === fullTerminalText.length;
+  const isInitialComplete = step === 'initial' && text.length === fullInitialText.length;
+  const isTerminalComplete = step === 'terminal' && text.length === fullTerminalText.length;
 
   return (
     <div className="w-full max-w-4xl mx-auto font-code p-4 min-h-[220px]">
-      {!isTerminalOpen ? (
+      {step === 'initial' ? (
         <button
           onClick={handleOpenTerminal}
-          className="text-left text-lg md:text-xl text-foreground w-full cursor-pointer group flex items-center gap-4"
-          disabled={!isInitialTypingComplete}
+          className="text-left text-lg md:text-xl text-foreground w-full cursor-pointer group flex items-center gap-4 outline-none"
+          disabled={!isInitialComplete}
         >
-          {showIcon && <Mail className="h-8 w-8 text-primary animate-slide-in" />}
+          {showIcon && <Mail className="h-8 w-8 text-primary transition-all duration-500 animate-in fade-in slide-in-from-left-4" />}
           {showIcon && (
-            <span className="animate-fade-in">
-              <span className="text-primary">></span> {initialText}
-              {isInitialTypingComplete && <span className="animate-ping">_</span>}
+            <span className="animate-in fade-in duration-700">
+              <span className="text-primary">></span> {text}
+              {isInitialComplete && <span className="animate-pulse">_</span>}
             </span>
           )}
         </button>
@@ -103,31 +93,35 @@ export function TerminalAnimation() {
               <span className="text-sm text-muted-foreground">/dev/message</span>
             </div>
             <div className="flex space-x-2">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+              <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
             </div>
           </div>
           <div className="p-6 text-left space-y-4">
             <p className="text-foreground text-lg md:text-xl">
-              <span className="text-primary">></span> {terminalText}
-              {!isHiring && isTerminalTypingComplete && <span className="animate-ping ml-1">_</span>}
+              <span className="text-primary">></span> {step === 'terminal' ? text : fullTerminalText}
+              {step === 'terminal' && text.length < fullTerminalText.length && <span className="animate-pulse ml-1">_</span>}
             </p>
-            {isTerminalTypingComplete && !isHiring && (
-              <div className="pt-2 animate-fade-in">
+            
+            {isTerminalComplete && step === 'terminal' && (
+              <div className="pt-2 animate-in fade-in duration-500">
                 <Button onClick={handleHireMe} variant="outline" className="text-primary-foreground border-primary hover:bg-primary/90">
                   <Briefcase className="mr-2 h-4 w-4" /> Hire Me
                 </Button>
               </div>
             )}
-             {isHiring && (
-              <div className="animate-fade-in">
+
+            {(step === 'hiring' || step === 'redirecting') && (
+              <div className="space-y-2">
                 <p className="text-foreground text-lg md:text-xl">
                   <span className="text-primary">></span> {commandText}
-                  {commandText.length === fullCommandText.length && !showRedirect ? '' : <span className="animate-ping ml-1">_</span>}
+                  {step === 'hiring' && commandText.length < fullCommandText.length && <span className="animate-pulse ml-1">_</span>}
                 </p>
-                {showRedirect && (
-                     <p className="text-accent text-lg md:text-xl animate-fade-in pt-2">Redirecting to contact page...</p>
+                {step === 'redirecting' && (
+                  <p className="text-accent text-lg md:text-xl animate-in fade-in duration-300">
+                    Redirecting to contact page...
+                  </p>
                 )}
               </div>
             )}
