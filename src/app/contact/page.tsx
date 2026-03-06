@@ -1,5 +1,5 @@
 import { ContactForm } from '@/components/contact-form';
-import { Github, Linkedin, Twitter, Mail, Phone } from 'lucide-react';
+import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
 
 export default function ContactPage() {
   return (
@@ -16,11 +16,7 @@ export default function ContactPage() {
             <div className="space-y-4">
               <a href="mailto:devworksabhi@gmail.com" className="flex items-center gap-3 text-lg hover:text-primary transition-colors">
                 <Mail className="h-5 w-5" />
-                <span>devworksabhi@gmail.com</span>
-              </a>
-              <a href="tel:+1234567890" className="flex items-center gap-3 text-lg hover:text-primary transition-colors">
-                <Phone className="h-5 w-5" />
-                <span>+1 (234) 567-890</span>
+                <span className="break-all">devworksabhi@gmail.com</span>
               </a>
             </div>
             <div className="mt-8 pt-8 border-t">
