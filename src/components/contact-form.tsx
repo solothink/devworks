@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -16,7 +17,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { handleContactForm } from "@/lib/actions";
+import { useFirestore } from "@/firebase";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError } from "@/firebase/errors";
+import { useState } from "react";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -26,6 +31,9 @@ const formSchema = z.object({
 
 export function ContactForm() {
   const { toast } = useToast();
+  const firestore = useFirestore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,21 +44,45 @@ export function ContactForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const result = await handleContactForm(values);
+    if (!firestore) return;
+    setIsSubmitting(true);
 
-    if (result.success) {
-      toast({
-        title: "Message Sent!",
-        description: "Thanks for reaching out. I'll get back to you soon.",
+    const messageId = crypto.randomUUID();
+    const docRef = doc(firestore, "contact_messages", messageId);
+    
+    const messageData = {
+      id: messageId,
+      name: values.name,
+      email: values.email,
+      message: values.message,
+      timestamp: new Date().toISOString(),
+      createdAt: serverTimestamp(),
+    };
+
+    setDoc(docRef, messageData)
+      .then(() => {
+        toast({
+          title: "Message Sent!",
+          description: "Thanks for reaching out. I'll get back to you soon.",
+        });
+        form.reset();
+      })
+      .catch(async (error) => {
+        const permissionError = new FirestorePermissionError({
+          path: docRef.path,
+          operation: 'create',
+          requestResourceData: messageData,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+        toast({
+          variant: "destructive",
+          title: "Failed to send message",
+          description: "There was a problem. Please try again later.",
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
-      form.reset();
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: result.message || "There was a problem with your submission.",
-      });
-    }
   }
 
   return (
@@ -104,8 +136,8 @@ export function ContactForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? "Sending..." : "Send Message"}
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Sending..." : "Send Message"}
             </Button>
           </form>
         </Form>
