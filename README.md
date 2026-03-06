@@ -1,5 +1,9 @@
-# Firebase Studio
+# DevWorks Portfolio
 
-This is a NextJS starter in Firebase Studio.
+Building Scalable Web, Mobile, and AI-Powered Solutions.
 
-To get started, take a look at src/app/page.tsx.
+This project is built with Next.js, React, Tailwind CSS, and Firebase.
+
+## Getting Started
+
+To see the project in action, navigate to the home page at `src/app/page.tsx`.

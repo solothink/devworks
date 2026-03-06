@@ -8,8 +8,8 @@ import Script from 'next/script';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
-  title: 'DevWorks Portfolio',
-  description: 'Building Scalable Web, Mobile, and AI-Powered Solutions',
+  title: 'DevWorks Portfolio | Expert Web & AI Solutions',
+  description: 'Building Scalable Web, Mobile, and AI-Powered Solutions that drive real business growth.',
 };
 
 export default function RootLayout({
