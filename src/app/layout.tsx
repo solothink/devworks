@@ -10,6 +10,9 @@ import { FirebaseClientProvider } from '@/firebase/client-provider';
 export const metadata: Metadata = {
   title: 'DevWorks Portfolio | Expert Web & AI Solutions',
   description: 'Building Scalable Web, Mobile, and AI-Powered Solutions that drive real business growth.',
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
